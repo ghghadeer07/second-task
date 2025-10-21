@@ -11,18 +11,19 @@ const coupons = require("../data/coupons");
 router.post("/", (req, res) => {
   const { items, coupon } = req.body;
 
-  // 1️⃣ تحقق من وجود items وأنه مصفوفة
+  
   if (!items || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: "Items array is required" });
   }
 
-  // 2️⃣ تحقق من صحة العناصر
+  //مصفوفة لتخزين العناصر التي تم طلبها 
   let orderItems = [];
+  //متغير لتخزين المجموع الفرعي 
   let subtotal = 0;
-
+//لوب يمر على كل العناصر 
   for (let orderItem of items) {
     const { id, qty } = orderItem;
-
+ // يتحقق من المخزون 
     if (!id || !qty || qty <= 0) {
       return res.status(400).json({ error: "Each item must have valid id and qty" });
     }
@@ -46,7 +47,7 @@ router.post("/", (req, res) => {
     });
   }
 
-  // 3️⃣ تطبيق الكوبون (اختياري)
+  //  تطبيق الكوبون (اختياري)
   let discount = 0;
   let appliedCoupon = null;
 
@@ -63,10 +64,10 @@ router.post("/", (req, res) => {
     }
   }
 
-  // 4️⃣ حساب الإجمالي النهائي
+  //  حساب الإجمالي النهائي
   const total = subtotal - discount;
 
-  // 5️⃣ إنشاء الرد النهائي
+  //  إنشاء الرد النهائي
   const response = {
     currency: "IQD",
     items: orderItems,
